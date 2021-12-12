@@ -16,8 +16,9 @@ model User {
   created_at DateTime
   updated_at DateTime @updatedAt
 
-  sent_user    Message[] @relation("sent")
-  receive_user Message[] @relation("receive")
+  sent_user        Message[]          @relation("sent")
+  receive_user     Message[]          @relation("receive")
+  ConnectionSocket ConnectionSocket[]
   @@map("users")
 }
 
@@ -37,4 +38,14 @@ model Message {
   answered_message Message?  @relation("MessageToMessage", fields: [answered_message_id], references: [id])
   Message          Message[] @relation("MessageToMessage")
   @@map("messages")
+}
+
+model ConnectionSocket {
+  id         String    @id @default(uuid())
+  user       User      @relation(fields: [user_id], references: [id])
+  user_id    String    @unique
+  socket_id  String
+  connected  Boolean
+  created_at DateTime? @default(now())
+  updated_at DateTime  @updatedAt
 }
