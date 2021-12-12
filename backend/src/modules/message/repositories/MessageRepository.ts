@@ -23,7 +23,12 @@ export class MessageRepository {
       },
       orderBy: {
         created_at: 'desc' 
-      }
+      },
+      include: {
+        answered_message: true,
+        receive_user: true,
+        sent_user: true,
+      },
     });
 
     return messages;
