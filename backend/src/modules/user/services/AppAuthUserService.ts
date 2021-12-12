@@ -7,6 +7,7 @@ import { authConfig } from '@config/auth';
 import { AppError } from '@errors/AppError';
 
 import { UserRepository } from '../repositories/UserRepository';
+import { connectionUserSocket } from '../middlewares/connectionUserSocket';
 
 interface IRequest {
   email: string;
@@ -40,6 +41,8 @@ export class AppAuthUserService {
       subject: user.id,
       expiresIn: authConfig.expiresIn,
     });
+        
+    connectionUserSocket();
 
     return {
       user,
