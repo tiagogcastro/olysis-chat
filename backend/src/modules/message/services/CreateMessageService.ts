@@ -1,4 +1,5 @@
 import { AppError } from '@errors/AppError';
+import { io } from '@http/app';
 import { UserRepository } from '@modules/user/repositories/UserRepository';
 import { Message } from '@prisma/client';
 
@@ -35,6 +36,8 @@ export class CreateMessageService {
       sent_user_id,
       answered_message_id,
     });
+
+    io.emit('new_message', message_created);
 
     return message_created;
   }
