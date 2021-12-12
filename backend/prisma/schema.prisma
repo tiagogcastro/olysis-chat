@@ -8,32 +8,33 @@ datasource db {
 }
 
 model User {
-  id              String    @id @default(uuid())
-  name            String?
-  username        String    @unique
-  email           String    @unique
-  password        String
-  created_at      DateTime
-  updated_at      DateTime  @updatedAt
-  receive_message Message[] @relation("receive_user")
-  sent_message    Message[] @relation("sent_user")
+  id         String   @id @default(uuid())
+  name       String?
+  username   String   @unique
+  email      String   @unique
+  password   String
+  created_at DateTime
+  updated_at DateTime @updatedAt
+
+  sent_user    Message[] @relation("sent")
+  receive_user Message[] @relation("receive")
+  @@map("users")
 }
 
 model Message {
   id String @id @default(uuid())
 
-  sent_user_id String
-  sent_user    User   @relation("sent_user", fields: [sent_user_id], references: [id])
-
-  receive_user_id String
-  receive_user    User   @relation("receive_user", fields: [receive_user_id], references: [id])
-
+  sent_user_id        String
+  receive_user_id     String
+  answered_message_id String?
   message             String
-  answered_message_id String
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
 
-  answered_message Message   @relation("ansewered_message", fields: [answered_message_id], references: [id])
-  Message          Message[] @relation("ansewered_message")
+  sent_user    User @relation("sent", fields: [sent_user_id], references: [id])
+  receive_user User @relation("receive", fields: [sent_user_id], references: [id])
 
-  created_at DateTime
-  updated_at DateTime @updatedAt
+  answered_message Message?  @relation("MessageToMessage", fields: [answered_message_id], references: [id])
+  Message          Message[] @relation("MessageToMessage")
+  @@map("messages")
 }
