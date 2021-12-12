@@ -1,4 +1,5 @@
 import { AppError } from '@errors/AppError';
+import { io } from '@http/app';
 import { UserRepository } from '@modules/user/repositories/UserRepository';
 import { Message } from '@prisma/client';
 
@@ -23,6 +24,8 @@ export class UserMessagesWithReceiveUserService {
     }
 
     const messages = await this.messageRepository.findAllBy_sent_receive_user_id(user_logged_id, receive_user_id);
+
+    io.emit('user_messages_with_receive_user', messages);
 
     return messages;
   }
